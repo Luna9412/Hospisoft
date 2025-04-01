@@ -54,7 +54,7 @@ const listartodos = async (req, res) => {
     if (!usuarioExiste) {
       return res.send({
         estado: false,
-        mensaje: "usuario no existe en la Bd !",
+        mensaje: "usuario no existe en la Bd!",
       });
     }
     if (

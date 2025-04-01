@@ -3,7 +3,7 @@ usuario.get("/api/usuarios/listarUsuarios", (req, res) => {
     const pagina = parseInt(req.query.pagina);
     const OFFSET = (pagina - 1) * limite;   
     const consulta2 = "SELECT COUNT(*) AS conteoUsuarios FROM usuarios ";
-    const consulta = "SELECT rol.nombre AS rol, usuarios.idusuarios, usuarios.nombre, usuarios.password FROM usuarios INNER JOIN rol ON usuarios.rol_idrol = rol.idrol LIMIT ? OFFSET ?;";
+    const consulta = "SELECT roles.nombre AS rol, usuarios.id, usuarios.nombre, usuarios.password FROM usuarios INNER JOIN roles ON usuarios.roles_id = roles.id LIMIT ? OFFSET ?;";
     query(consulta2, (error, totalUsuarios) => {
         query(consulta, [limite, OFFSET], (error, usuarios) => {
             res.send({
@@ -16,7 +16,7 @@ usuario.get("/api/usuarios/listarUsuarios", (req, res) => {
 });
 usuario.get("/api/usuarios/listarPorId/:id", (req, res) => {
     const id = req.params.id;
-    const consulta = "SELECT * FROM usuarios WHERE idusuarios = ?";
+    const consulta = "SELECT * FROM usuarios WHERE id = ?";
     query(consulta, [id], (error, usuarios) => {
         if (error) {
             res.send({
@@ -37,7 +37,7 @@ usuario.post("/api/usuarios/crearUsuario", (req, res) => {
     const formDatosUsuario = {
         nombre: req.body.nombre,
         password: bcrypt.hashSync(req.body.pass, 10),
-        rol_idrol: req.body.rol_idrol
+        roles_id: req.body.roles_id
     };
     const consulta = "INSERT INTO usuarios SET ?";
     query(consulta, [formDatosUsuario], (error, usuarios) => {
@@ -58,7 +58,7 @@ usuario.post("/api/usuarios/crearUsuario", (req, res) => {
 });
 usuario.delete("/api/usuarios/borrarPorId/:id", (req, res) => {
     const id = req.params.id;
-    const consulta = "DELETE FROM usuarios WHERE idusuarios = ?";
+    const consulta = "DELETE FROM usuarios WHERE id = ?";
     query(consulta, [id], (error, usuarios) => {
         if (error) {
             res.send({
@@ -79,10 +79,10 @@ usuario.put("/api/usuarios/editarPorId/:id", (req, res) => {
     const id = req.params.id;
     const formDatosUsuario = {
         nombre: req.body.nombre,
-        rol_idrol: req.body.rol_idrol,
+        roles_id: req.body.roles_id,
         password: bcrypt.hashSync(req.body.pass, 10)
     };
-    const consulta = "UPDATE usuarios SET ? WHERE idusuarios = ?";
+    const consulta = "UPDATE usuarios SET ? WHERE id = ?";
     query(consulta, [formDatosUsuario, id], (error, usuarios) => {
         if (error) {
             res.send({
