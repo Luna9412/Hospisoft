@@ -1,8 +1,7 @@
 import express, { json } from "express";
 const router = express.Router();
-import { getAll, add, updateMedical } from "../controllers/medicos.js";
+import { getAll, add, updateMedico } from "../controllers/medicos.js";
 import { celebrate, Joi, errors, Segments } from "celebrate";
-
 router.get("/medicos/list", async (req, res) => {
   try {
     const response = await getAll();
@@ -40,7 +39,7 @@ router.post(
     }
   }
 );
-router.post(
+router.put(
   "/medicos/update",
   Joi.celebrate({
     body: Joi.object({
@@ -52,8 +51,8 @@ router.post(
   }),
   async (req, res) => {
     try {
-      const { body: data } = req; // obtenemos los datos del body
-      const response = await updateMedical(data);
+      const { body: data } = req; 
+      const response = await updateMedico(data);
       res.status(200).json(response);
     } catch (error) {
       console.log(error);

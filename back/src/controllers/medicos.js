@@ -1,4 +1,4 @@
-import Medico from "../models/medicos.js";
+import Medico, {find,findOne,findByIdAndUpdate,findById,findOneAndDelete,} from "../models/medicos.js";
 
 export const getAll = async (req, res) => {
   try {

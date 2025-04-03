@@ -1,7 +1,6 @@
 import Usuario, {find,findOne,findByIdAndUpdate,findById,findOneAndDelete,}from "../models/usuarios.js";
 import { hashSync, compareSync } from "bcryptjs";
 import { sign } from "jsonwebtoken";
-import { unlink, stat } from "fs";
 import { resolve } from "path";
 import { findByIdAndUpdate as _findByIdAndUpdate } from "../models/usuarios.js";
 
@@ -113,11 +112,9 @@ export const login = async (req, res) => {
       mensaje: "no existe el usuario",
     });
   }
-
   // validamos credemciales
   if (compareSync(req.body.password, usuarioExiste.passwordHash)) {
     //autenticacion de 2 factores con generacion de token
-
     const token = sign(
       // datos a codificar en le toke
       {
@@ -136,7 +133,7 @@ export const login = async (req, res) => {
   } else {
     return res.send({
       estado: false,
-      mensaje: "Contraseña incorrecta , Intente de nuevo !",
+      mensaje: "Contraseña incorrecta, Intente de nuevo!",
     });
   }
 };
