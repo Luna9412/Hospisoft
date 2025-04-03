@@ -1,16 +1,11 @@
-import Usuario, {find,findOne,findByIdAndUpdate,findById,findOneAndDelete,}from "../models/usuarios.js";
-import { hashSync, compareSync } from "bcryptjs";
-import { sign } from "jsonwebtoken";
-import { unlink, stat } from "fs";
-import { resolve } from "path";
-import { findByIdAndUpdate as _findByIdAndUpdate } from "../models/usuarios.js";
+import Medico from "../models/medicos.js";
 
-export const getUsuarios = async (req, res) => {
+export const getAll = async (req, res) => {
   try {
-    let listaUsuarios = await find().exec();
+    let listarMedicos = await find().exec();
     res.status(200).send({
       Exito: true,
-      data: listaUsuarios,
+      data: listarMedicos,
       mensaje: "Exito en la consulta",
     });
   } catch (error) {
@@ -20,26 +15,23 @@ export const getUsuarios = async (req, res) => {
     });
   }
 };
-
-export const setUsuario = async (req, res) => {
+export const add = async (req, res) => {
   let data = {
-    documento: req.body.documento,
     nombre: req.body.nombre,
     email: req.body.email,
+    especialidad: req.especialidad,
     passwordHash: hashSync(req.body.passwordHash, 10),
   };
 
-  const usuarioExiste = await findOne({ email: data.email });
-
-  if (usuarioExiste) {
+  const medicoExiste = await findOne({ email: data.email });
+  if (medicoExiste) {
     return res.send({
       estado: false,
       mensaje: "el usuario ya existe en el sistema",
     });
   }
-
   try {
-    const usuarioNuevo = new Usuario(data);
+    const usuarioNuevo = new Medicals(data);
     await usuarioNuevo.save();
     return res.send({
       estado: true,
@@ -52,10 +44,9 @@ export const setUsuario = async (req, res) => {
     });
   }
 };
-export const UsuarioUpdate = async (req, res) => {
+export const updateMedico = async (req, res) => {
   let id = req.params.id;
   let data = {
-    documento: req.body.documento,
     nombre: req.body.nombre,
     email: req.body.email,
   };
@@ -101,42 +92,7 @@ export const deleteById = async (req, res) => {
   } catch (error) {
     return res.send({
       estado: false,
-      mensaje: "Error, Nos fue posible eliminar el producto.",
-    });
-  }
-};
-export const login = async (req, res) => {
-  let usuarioExiste = await findOne({ email: req.body.email });
-  if (!usuarioExiste) {
-    return res.send({
-      estado: false,
-      mensaje: "no existe el usuario",
-    });
-  }
-
-  // validamos credemciales
-  if (compareSync(req.body.password, usuarioExiste.passwordHash)) {
-    //autenticacion de 2 factores con generacion de token
-
-    const token = sign(
-      // datos a codificar en le toke
-      {
-        userId: usuarioExiste.id,
-      },
-      // Salt de la codificacion o hashing
-      "seCreTo",
-      // vida util
-      { expiresIn: "1h" }
-    );
-    return res.send({
-      estado: true,
-      mensaje: "ok",
-      token: token,
-    });
-  } else {
-    return res.send({
-      estado: false,
-      mensaje: "Contraseña incorrecta , Intente de nuevo !",
+      mensaje: "Error, Nos fue posible eliminar.",
     });
   }
 };

@@ -2,6 +2,10 @@
 import { Schema, model } from "mongoose";
 const usuarioSchema = new Schema(
   {
+    documento: {
+        type: String,
+        required: true,
+      },
     nombre: {
       type: String,
       required: true,
@@ -15,6 +19,6 @@ const usuarioSchema = new Schema(
       required: true,
     },
   },
-  { collection: "users" }
+  { collection: "usuarios" }
 );
 export default model("Usuario", usuarioSchema);

@@ -16,4 +16,4 @@ const medicosSchema = new Schema(
   },
   { collection: "medicos" }
 );
-export default model("medicos", medicosSchema);
+export default model("Medico", medicosSchema);
