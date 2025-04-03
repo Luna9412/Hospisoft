@@ -44,7 +44,7 @@ export const add = async (req, res) => {
     });
   }
 };
-export const updateMedico = async (req, res) => {
+export const UpdateMedico = async (req, res) => {
   let id = req.params.id;
   let data = {
     nombre: req.body.nombre,
