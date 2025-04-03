@@ -1,4 +1,5 @@
 import Medico, {find,findOne,findByIdAndUpdate,findById,findOneAndDelete,} from "../models/medicos.js";
+import { hashSync, compareSync } from "bcryptjs";
 
 export const getAll = async (req, res) => {
   try {
@@ -22,7 +23,6 @@ export const add = async (req, res) => {
     especialidad: req.especialidad,
     passwordHash: hashSync(req.body.passwordHash, 10),
   };
-
   const medicoExiste = await findOne({ email: data.email });
   if (medicoExiste) {
     return res.send({
