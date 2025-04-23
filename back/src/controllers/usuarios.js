@@ -1,139 +1,108 @@
-import Usuario, {find,findOne,findByIdAndUpdate,findById,findOneAndDelete,}from "../models/usuarios.js";
-import { hashSync, compareSync } from "bcryptjs";
-import { sign } from "jsonwebtoken";
-import { resolve } from "path";
-import { findByIdAndUpdate as _findByIdAndUpdate } from "../models/usuarios.js";
+import Usuarios from "../models/usuarios.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
-export const getUsuarios = async (req, res) => {
+
+export const listarTodos = async (req, res) => {
   try {
-    let listaUsuarios = await find().exec();
+    const listarUsuarios = await Usuarios.find().exec();
     res.status(200).send({
-      Exito: true,
-      data: listaUsuarios,
-      mensaje: "Exito en la consulta",
+      exito: true,
+      listarUsuarios
     });
   } catch (error) {
     res.status(500).send({
-      Exito: false,
-      mensaje: "Error, en la consulta.",
+      exito: false,
+      mensaje: `Error: ${error}`
     });
   }
 };
 
-export const setUsuario = async (req, res) => {
-  let data = {
-    documento: req.body.documento,
+export const nuevo = async (req, res) => {
+  let datos = {
     nombre: req.body.nombre,
+    apellido: req.body.apellido,
     email: req.body.email,
-    passwordHash: hashSync(req.body.passwordHash, 10),
+    telefono: req.body.telefono,
+    especialidad: req.body.especialidad,
+    rol: req.body.rol,
+    nombreUsuario: req.body.nombreUsuario,
+    passwordUsuario: req.body.passwordUsuario
   };
 
-  const usuarioExiste = await findOne({ email: data.email });
-
-  if (usuarioExiste) {
-    return res.send({
-      estado: false,
-      mensaje: "el usuario ya existe en el sistema",
-    });
-  }
-
   try {
-    const usuarioNuevo = new Usuario(data);
-    await usuarioNuevo.save();
+    const usuarioNuevo = new Usuarios(datos);
+    usuarioNuevo.save(); //Escribe el mongo
     return res.send({
       estado: true,
-      mensaje: "usuario creado exitosamente",
+      mensaje: `Usuario creado exitosamente`,
     });
   } catch (error) {
     return res.send({
       estado: false,
-      mensaje: `error ${error}`,
+      mensaje: `Error: ${error}`
     });
   }
 };
-export const UsuarioUpdate = async (req, res) => {
+
+export const buscarPorID = async (req, res) => {
   let id = req.params.id;
-  let data = {
-    documento: req.body.documento,
+  try {
+    let consulta = await Usuarios.findById(id).exec();
+    return res.send({
+      estado: true,
+      mensaje: `Busqueda exitosa`,
+      consulta: consulta
+    });
+  } catch (error) {
+    return res.send({
+      estado: false,
+      mensaje: `Error, no se pudo realizar la consulta`
+    });
+  }
+};
+
+export const actualizarPorID = async (req, res) => {
+  let id = req.params.id;
+  let datos = {
     nombre: req.body.nombre,
+    apellido: req.body.apellido,
     email: req.body.email,
+    telefono: req.body.telefono,
+    especialidad: req.body.especialidad,
+    rol: req.body.rol,
+    nombreUsuario: req.body.nombreUsuario,
+    passwordUsuario: req.body.passwordUsuario
   };
   try {
-    let usuarioUpdate = await findByIdAndUpdate(id, data);
+    let consulta = await Usuarios.findByIdAndUpdate(id, datos).exec();
     return res.send({
       estado: true,
-      mensaje: "Actualizacion Exitosa!",
-      reslut: usuarioUpdate,
+      mensaje: `Actualizacion exitosa`,
+      consulta: consulta
     });
   } catch (error) {
     return res.send({
-      estado: false,
-      mensaje: `Error en la Actualizacion: ${error}`,
+      estado: true,
+      mensaje: `Error al actualizar`,
+      consulta: consulta
     });
   }
 };
-export const searchById = async (req, res) => {
+
+export const eliminarPorId = async (req, res) => {
   let id = req.params.id;
   try {
-    let result = await findById(id).exec();
+    let consulta = await Usuarios.findOneAndDelete({ _id: id }).exec();
     return res.send({
       estado: true,
-      mensaje: "Consulta Exitosa",
-      result: result,
+      mensaje: `Eliminado exitosamente`,
+      consulta: consulta
     });
   } catch (error) {
     return res.send({
       estado: false,
-      mensaje: "Error, No fue posible encotrar el registro.",
-    });
-  }
-};
-export const deleteById = async (req, res) => {
-  let id = req.params.id;
-  try {
-    let result = await findOneAndDelete(id).exec();
-    return res.send({
-      estado: true,
-      mensaje: "Borrado Exitoso",
-      result: result,
-    });
-  } catch (error) {
-    return res.send({
-      estado: false,
-      mensaje: "Error, Nos fue posible eliminar el producto.",
-    });
-  }
-};
-export const login = async (req, res) => {
-  let usuarioExiste = await findOne({ email: req.body.email });
-  if (!usuarioExiste) {
-    return res.send({
-      estado: false,
-      mensaje: "no existe el usuario",
-    });
-  }
-  // validamos credemciales
-  if (compareSync(req.body.password, usuarioExiste.passwordHash)) {
-    //autenticacion de 2 factores con generacion de token
-    const token = sign(
-      // datos a codificar en le toke
-      {
-        userId: usuarioExiste.id,
-      },
-      // Salt de la codificacion o hashing
-      "seCreTo",
-      // vida util
-      { expiresIn: "1h" }
-    );
-    return res.send({
-      estado: true,
-      mensaje: "ok",
-      token: token,
-    });
-  } else {
-    return res.send({
-      estado: false,
-      mensaje: "Contraseña incorrecta, Intente de nuevo!",
+      mensaje: `Error: ${error}`
     });
   }
 };
