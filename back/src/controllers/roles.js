@@ -15,7 +15,7 @@ export const ListarTodos = async (req, res) => {
   }
 };
 
-export const InsertarRol = async (req, res) => {
+export const RolNuevo = async (req, res) => {
   let datos = {
     nombre: req.body.nombre,
     descripcion: req.body.descripcion,

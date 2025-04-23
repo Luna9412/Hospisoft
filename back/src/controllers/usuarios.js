@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 
-export const listarTodos = async (req, res) => {
+export const ListarTodos = async (req, res) => {
   try {
     const listarUsuarios = await Usuarios.find().exec();
     res.status(200).send({
@@ -18,7 +18,7 @@ export const listarTodos = async (req, res) => {
   }
 };
 
-export const nuevo = async (req, res) => {
+export const UsuarioNuevo = async (req, res) => {
   let datos = {
     nombre: req.body.nombre,
     apellido: req.body.apellido,
@@ -45,7 +45,7 @@ export const nuevo = async (req, res) => {
   }
 };
 
-export const buscarPorID = async (req, res) => {
+export const BuscarPorID = async (req, res) => {
   let id = req.params.id;
   try {
     let consulta = await Usuarios.findById(id).exec();
@@ -62,7 +62,7 @@ export const buscarPorID = async (req, res) => {
   }
 };
 
-export const actualizarPorID = async (req, res) => {
+export const ActualizarPorID = async (req, res) => {
   let id = req.params.id;
   let datos = {
     nombre: req.body.nombre,
@@ -90,7 +90,7 @@ export const actualizarPorID = async (req, res) => {
   }
 };
 
-export const eliminarPorId = async (req, res) => {
+export const EliminarPorId = async (req, res) => {
   let id = req.params.id;
   try {
     let consulta = await Usuarios.findOneAndDelete({ _id: id }).exec();

@@ -15,7 +15,7 @@ export const ListarTodos = async () => {
   }
 };
 
-export const InsertarPaciente = async (data) => {
+export const PacienteNuevo = async (data) => {
   const pacienteExiste = await Pacientes.findOne({ documento: data.documento });
   if (pacienteExiste) {
     return {

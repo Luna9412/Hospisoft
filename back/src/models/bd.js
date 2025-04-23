@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import config from "./config.js";
 
-export const cnx = async () => {
+export const cnn = async () => {
   try {
     await mongoose.connect(config.url, config.options);
     console.log("Conexion exitosa");

@@ -31,7 +31,7 @@ export const renderImagen = async (img) => {
   });
 };
 
-export const add = async (data, file) => {
+export const MedicamentoNuevo = async (data, file) => {
   const extensionesValidas = ["png", "jpg", "jpeg", "gif"];
   const medicalExist = await Medicamentos.findOne({
     codigo: data.codigo
