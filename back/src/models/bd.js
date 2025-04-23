@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import config from "../config/bd.js";
+import config from "./config.js";
 
 export const cnx = async () => {
   try {

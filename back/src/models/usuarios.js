@@ -1,11 +1,6 @@
-
 import { Schema, model } from "mongoose";
 const usuarioSchema = new Schema(
   {
-    documento: {
-        type: String,
-        required: true,
-      },
     nombre: {
       type: String,
       required: true,
@@ -21,4 +16,4 @@ const usuarioSchema = new Schema(
   },
   { collection: "usuarios" }
 );
-export default model("Usuario", usuarioSchema);
+export default model("Usuarios", usuarioSchema);

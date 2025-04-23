@@ -2,7 +2,7 @@ import Pacientes from "../models/paciente.js";
 
 export const ListarTodos = async () => {
   try {
-    let listarMedicos = await Patients.find().exec();
+    let listarMedicos = await Pacientes.find().exec();
     return {
       estado: true,
       data: listarMedicos,
@@ -16,7 +16,7 @@ export const ListarTodos = async () => {
 };
 
 export const InsertarPaciente = async (data) => {
-  const pacienteExiste = await Patients.findOne({ documento: data.documento });
+  const pacienteExiste = await Pacientes.findOne({ documento: data.documento });
   if (pacienteExiste) {
     return {
       estado: false,
